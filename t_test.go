@@ -7,7 +7,7 @@ import (
 
 func TestT(t *testing.T) {
 	Location = "locale/"
-	Language = "ru"
+	Language = "en"
 
 	r, err := T("error.zero.none")
 	if err != nil {
