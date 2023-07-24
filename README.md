@@ -7,7 +7,7 @@ i18n is a Go [package](#package-i18n) that helps you translate Go programs into 
 The i18n package provides support for looking up messages according to a set of locale preferences.
 
 ```go
-import "github.com/makhmudov/i18n"
+go get github.com/makhmudovazeez/i18n
 ```
 
 Set up the location of your json translation files.
