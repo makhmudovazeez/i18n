@@ -2,31 +2,45 @@ package i18n
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"strings"
+
+	"github.com/makhmudovazeez/i18n/helper"
 )
 
 var Location string
 var Language string
+var Debug bool = false
 
-func T(word string) (string, error) {
+func T(word string) string {
 	if len(Location) == 0 {
-		return "", errors.New("set up location")
+		if Debug {
+			fmt.Println(helper.Warning("set up location"))
+		}
+		return word
 	} else if len(Language) == 0 {
-		return "", errors.New("set up language")
+		if Debug {
+			fmt.Println(helper.Warning("set up language"))
+		}
+		return word
 	}
 
 	file, err := ioutil.ReadFile(getLocation())
 	if err != nil {
-		return "", err
+		if Debug {
+			fmt.Println(helper.Warning(err.Error()))
+		}
+		return word
 	}
 
 	var jsonWords map[string]interface{}
 
 	if err := json.Unmarshal(file, &jsonWords); err != nil {
-		return "", err
+		if Debug {
+			fmt.Println(helper.Warning(err.Error()))
+		}
+		return word
 	}
 
 	wordSlice := strings.Split(word, ".")
@@ -34,7 +48,7 @@ func T(word string) (string, error) {
 	for _, w := range wordSlice {
 		result, ok := jsonWords[w]
 		if !ok {
-			return "", errors.New("no such translation")
+			return word
 		}
 
 		switch result.(type) {
@@ -43,10 +57,10 @@ func T(word string) (string, error) {
 			continue
 		}
 
-		return fmt.Sprintf("%v", result), nil
+		return fmt.Sprintf("%v", result)
 	}
 
-	return "", errors.New("no such translation12312")
+	return word
 }
 
 func getLocation() (fileLocation string) {
